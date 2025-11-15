@@ -1,3 +1,4 @@
+
 // Chartered Accountant Platform - Main JavaScript
 
 // Data Storage (using localStorage)
@@ -905,23 +906,14 @@ function generateTrialBalance(transactions) {
 function refreshAIInsights() {
     const insightsPanel = document.getElementById('insights-panel');
     if (!insightsPanel) return;
+    
     insightsPanel.innerHTML = '<div class="insight-loading"><p>Analyzing your business data...</p></div>';
-
-    // Try backend insights
-    api.get('/api/ai-insights').then(res => {
-        if (res && res.success) {
-            // convert simple insights into the expected format
-            const insights = [
-                { title: 'Totals', description: `Revenue: ${formatCurrency(res.insights.totalRevenue)} • Expenses: ${formatCurrency(res.insights.totalExpenses)}`, action: 'View Reports', priority: 'low', impact: `Net: ${formatCurrency(res.insights.netProfit)}` }
-            ];
-            displayInsights(insights);
-        } else throw new Error('No insights');
-    }).catch(() => {
-        setTimeout(() => {
-            const insights = generateAIInsights();
-            displayInsights(insights);
-        }, 500);
-    });
+    
+    // Simulate AI analysis
+    setTimeout(() => {
+        const insights = generateAIInsights();
+        displayInsights(insights);
+    }, 1000);
 }
 
 function showInsightCategory(category) {
