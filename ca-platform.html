@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chartered Accountant Platform - Professional Accounting Solutions</title>
+    <link rel="stylesheet" href="ca-platform.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1>📊 CA Professional Platform</h1>
+                    <p>Complete Accounting & Business Solutions</p>
+                </div>
+                <div class="header-actions">
+                    <div class="user-profile">
+                        <span id="current-user">CA Professional</span>
+                        <button class="btn-icon" onclick="showSettings()">⚙️</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <button class="nav-btn active" onclick="showSection('dashboard')">
+                <span class="icon">📈</span> Dashboard
+            </button>
+            <button class="nav-btn" onclick="showSection('clients')">
+                <span class="icon">👥</span> Clients
+            </button>
+            <button class="nav-btn" onclick="showSection('accounting')">
+                <span class="icon">📚</span> Accounting
+            </button>
+            <button class="nav-btn" onclick="showSection('tax')">
+                <span class="icon">💰</span> Tax & Compliance
+            </button>
+            <button class="nav-btn" onclick="showSection('reports')">
+                <span class="icon">📄</span> Reports
+            </button>
+            <button class="nav-btn" onclick="showSection('ai-insights')">
+                <span class="icon">🤖</span> AI Insights
+            </button>
+            <button class="nav-btn" onclick="showSection('invoices')">
+                <span class="icon">🧾</span> Invoices
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <h2>Dashboard Overview</h2>
+                    <div class="date-filter">
+                        <select id="period-select" onchange="updateDashboard()">
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month" selected>This Month</option>
+                            <option value="quarter">This Quarter</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="metrics-grid">
+                    <div class="metric-card revenue">
+                        <div class="metric-icon">💵</div>
+                        <div class="metric-info">
+                            <h3>Total Revenue</h3>
+                            <p class="metric-value" id="total-revenue">₹0</p>
+                            <span class="metric-change positive" id="revenue-change">+0%</span>
+                        </div>
+                    </div>
+                    <div class="metric-card expenses">
+                        <div class="metric-icon">📉</div>
+                        <div class="metric-info">
+                            <h3>Total Expenses</h3>
+                            <p class="metric-value" id="total-expenses">₹0</p>
+                            <span class="metric-change negative" id="expenses-change">+0%</span>
+                        </div>
+                    </div>
+                    <div class="metric-card profit">
+                        <div class="metric-icon">📊</div>
+                        <div class="metric-info">
+                            <h3>Net Profit</h3>
+                            <p class="metric-value" id="net-profit">₹0</p>
+                            <span class="metric-change" id="profit-change">+0%</span>
+                        </div>
+                    </div>
+                    <div class="metric-card clients">
+                        <div class="metric-icon">👥</div>
+                        <div class="metric-info">
+                            <h3>Active Clients</h3>
+                            <p class="metric-value" id="active-clients">0</p>
+                            <span class="metric-change positive">All Active</span>
+                        </div>
+                    </div>
+                    <div class="metric-card tax">
+                        <div class="metric-icon">💰</div>
+                        <div class="metric-info">
+                            <h3>Tax Liability</h3>
+                            <p class="metric-value" id="tax-liability">₹0</p>
+                            <span class="metric-change">Current Period</span>
+                        </div>
+                    </div>
+                    <div class="metric-card invoices">
+                        <div class="metric-icon">🧾</div>
+                        <div class="metric-info">
+                            <h3>Pending Invoices</h3>
+                            <p class="metric-value" id="pending-invoices">0</p>
+                            <span class="metric-change warning">Requires Attention</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Revenue vs Expenses</h3>
+                        <canvas id="revenue-expense-chart" height="300"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Profit Trend</h3>
+                        <canvas id="profit-trend-chart" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3>Quick Actions</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showSection('clients'); addNewClient()">
+                            ➕ Add New Client
+                        </button>
+                        <button class="action-btn" onclick="showSection('invoices'); createInvoice()">
+                            🧾 Create Invoice
+                        </button>
+                        <button class="action-btn" onclick="showSection('accounting'); addTransaction()">
+                            📝 Record Transaction
+                        </button>
+                        <button class="action-btn" onclick="showSection('reports'); generateReport()">
+                            📊 Generate Report
+                        </button>
+                        <button class="action-btn" onclick="showSection('ai-insights'); getAIInsights()">
+                            🤖 Get AI Insights
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clients Section -->
+            <section id="clients" class="content-section">
+                <div class="section-header">
+                    <h2>Client Management</h2>
+                    <button class="btn-primary" onclick="showClientModal()">➕ Add New Client</button>
+                </div>
+
+                <div class="clients-grid" id="clients-grid">
+                    <!-- Clients will be dynamically loaded here -->
+                </div>
+            </section>
+
+            <!-- Accounting Section -->
+            <section id="accounting" class="content-section">
+                <div class="section-header">
+                    <h2>Accounting & Bookkeeping</h2>
+                    <button class="btn-primary" onclick="showTransactionModal()">➕ Add Transaction</button>
+                </div>
+
+                <div class="accounting-tabs">
+                    <button class="tab-btn active" onclick="showAccountingTab('transactions')">Transactions</button>
+                    <button class="tab-btn" onclick="showAccountingTab('chart-of-accounts')">Chart of Accounts</button>
+                    <button class="tab-btn" onclick="showAccountingTab('reconciliation')">Bank Reconciliation</button>
+                </div>
+
+                <div id="transactions-tab" class="accounting-tab-content active">
+                    <div class="filters">
+                        <input type="date" id="transaction-date-from" class="filter-input">
+                        <input type="date" id="transaction-date-to" class="filter-input">
+                        <select id="transaction-type-filter" class="filter-input">
+                            <option value="">All Types</option>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                            <option value="asset">Asset</option>
+                            <option value="liability">Liability</option>
+                        </select>
+                        <button class="btn-secondary" onclick="filterTransactions()">Filter</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="transactions-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Client</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactions-body">
+                                <!-- Transactions will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="chart-of-accounts-tab" class="accounting-tab-content">
+                    <div class="accounts-tree" id="accounts-tree">
+                        <!-- Chart of accounts will be displayed here -->
+                    </div>
+                </div>
+
+                <div id="reconciliation-tab" class="accounting-tab-content">
+                    <div class="reconciliation-panel">
+                        <h3>Bank Reconciliation</h3>
+                        <p>Match your bank statements with recorded transactions</p>
+                        <!-- Reconciliation interface will be here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tax Section -->
+            <section id="tax" class="content-section">
+                <div class="section-header">
+                    <h2>Tax & Compliance</h2>
+                </div>
+
+                <div class="tax-tabs">
+                    <button class="tab-btn active" onclick="showTaxTab('gst')">GST</button>
+                    <button class="tab-btn" onclick="showTaxTab('income-tax')">Income Tax</button>
+                    <button class="tab-btn" onclick="showTaxTab('tds')">TDS</button>
+                    <button class="tab-btn" onclick="showTaxTab('compliance')">Compliance</button>
+                </div>
+
+                <div id="gst-tab" class="tax-tab-content active">
+                    <div class="tax-calculator">
+                        <h3>GST Calculator</h3>
+                        <div class="calculator-form">
+                            <div class="form-group">
+                                <label>Base Amount (₹)</label>
+                                <input type="number" id="gst-base-amount" placeholder="Enter amount" oninput="calculateGST()">
+                            </div>
+                            <div class="form-group">
+                                <label>GST Rate (%)</label>
+                                <select id="gst-rate" onchange="calculateGST()">
+                                    <option value="5">5%</option>
+                                    <option value="12">12%</option>
+                                    <option value="18" selected>18%</option>
+                                    <option value="28">28%</option>
+                                </select>
+                            </div>
+                            <div class="gst-result">
+                                <div class="result-item">
+                                    <span>Base Amount:</span>
+                                    <strong id="gst-base-result">₹0.00</strong>
+                                </div>
+                                <div class="result-item">
+                                    <span>GST Amount:</span>
+                                    <strong id="gst-amount-result">₹0.00</strong>
+                                </div>
+                                <div class="result-item total">
+                                    <span>Total Amount:</span>
+                                    <strong id="gst-total-result">₹0.00</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gst-summary">
+                        <h3>GST Summary</h3>
+                        <div class="summary-grid">
+                            <div class="summary-card">
+                                <h4>CGST Collected</h4>
+                                <p id="cgst-collected">₹0</p>
+                            </div>
+                            <div class="summary-card">
+                                <h4>SGST Collected</h4>
+                                <p id="sgst-collected">₹0</p>
+                            </div>
+                            <div class="summary-card">
+                                <h4>IGST Collected</h4>
+                                <p id="igst-collected">₹0</p>
+                            </div>
+                            <div class="summary-card">
+                                <h4>GST Payable</h4>
+                                <p id="gst-payable">₹0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="income-tax-tab" class="tax-tab-content">
+                    <div class="tax-calculator">
+                        <h3>Income Tax Calculator</h3>
+                        <div class="calculator-form">
+                            <div class="form-group">
+                                <label>Annual Income (₹)</label>
+                                <input type="number" id="annual-income" placeholder="Enter annual income" oninput="calculateIncomeTax()">
+                            </div>
+                            <div class="form-group">
+                                <label>Tax Regime</label>
+                                <select id="tax-regime" onchange="calculateIncomeTax()">
+                                    <option value="new">New Tax Regime</option>
+                                    <option value="old">Old Tax Regime</option>
+                                </select>
+                            </div>
+                            <div class="tax-result">
+                                <div class="result-item">
+                                    <span>Taxable Income:</span>
+                                    <strong id="taxable-income">₹0.00</strong>
+                                </div>
+                                <div class="result-item">
+                                    <span>Tax Payable:</span>
+                                    <strong id="tax-payable">₹0.00</strong>
+                                </div>
+                                <div class="result-item">
+                                    <span>Cess (4%):</span>
+                                    <strong id="tax-cess">₹0.00</strong>
+                                </div>
+                                <div class="result-item total">
+                                    <span>Total Tax:</span>
+                                    <strong id="total-tax">₹0.00</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tds-tab" class="tax-tab-content">
+                    <h3>TDS Management</h3>
+                    <p>TDS calculation and compliance tracking</p>
+                </div>
+
+                <div id="compliance-tab" class="tax-tab-content">
+                    <h3>Compliance Calendar</h3>
+                    <div class="compliance-list" id="compliance-list">
+                        <!-- Compliance items will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="content-section">
+                <div class="section-header">
+                    <h2>Financial Reports</h2>
+                    <div class="report-controls">
+                        <select id="report-type" class="filter-input">
+                            <option value="pl">Profit & Loss Statement</option>
+                            <option value="balance-sheet">Balance Sheet</option>
+                            <option value="cash-flow">Cash Flow Statement</option>
+                            <option value="trial-balance">Trial Balance</option>
+                            <option value="aged-receivables">Aged Receivables</option>
+                            <option value="aged-payables">Aged Payables</option>
+                        </select>
+                        <input type="date" id="report-date-from" class="filter-input">
+                        <input type="date" id="report-date-to" class="filter-input">
+                        <button class="btn-primary" onclick="generateFinancialReport()">Generate Report</button>
+                        <button class="btn-secondary" onclick="exportReport()">📥 Export</button>
+                    </div>
+                </div>
+
+                <div class="report-container" id="report-container">
+                    <div class="report-placeholder">
+                        <p>Select a report type and date range, then click "Generate Report"</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Insights Section -->
+            <section id="ai-insights" class="content-section">
+                <div class="section-header">
+                    <h2>AI-Powered Business Insights</h2>
+                    <button class="btn-primary" onclick="refreshAIInsights()">🔄 Refresh Insights</button>
+                </div>
+
+                <div class="ai-insights-container">
+                    <div class="insight-categories">
+                        <button class="insight-category-btn active" onclick="showInsightCategory('profit')">
+                            💰 Profit Optimization
+                        </button>
+                        <button class="insight-category-btn" onclick="showInsightCategory('cost')">
+                            📉 Cost Reduction
+                        </button>
+                        <button class="insight-category-btn" onclick="showInsightCategory('growth')">
+                            📈 Growth Opportunities
+                        </button>
+                        <button class="insight-category-btn" onclick="showInsightCategory('risk')">
+                            ⚠️ Risk Management
+                        </button>
+                        <button class="insight-category-btn" onclick="showInsightCategory('cashflow')">
+                            💵 Cash Flow
+                        </button>
+                    </div>
+
+                    <div class="insights-panel" id="insights-panel">
+                        <div class="insight-loading">
+                            <p>Analyzing your business data...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Invoices Section -->
+            <section id="invoices" class="content-section">
+                <div class="section-header">
+                    <h2>Invoice Management</h2>
+                    <button class="btn-primary" onclick="showInvoiceModal()">➕ Create Invoice</button>
+                </div>
+
+                <div class="invoices-grid" id="invoices-grid">
+                    <!-- Invoices will be loaded here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Client Modal -->
+    <div id="client-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('client-modal')">&times;</span>
+            <h2>Add/Edit Client</h2>
+            <form id="client-form">
+                <div class="form-group">
+                    <label>Client Name *</label>
+                    <input type="text" id="client-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Business Type</label>
+                    <select id="client-business-type">
+                        <option value="sole-proprietor">Sole Proprietor</option>
+                        <option value="partnership">Partnership</option>
+                        <option value="llp">LLP</option>
+                        <option value="private-limited">Private Limited</option>
+                        <option value="public-limited">Public Limited</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>GSTIN</label>
+                    <input type="text" id="client-gstin" placeholder="GSTIN Number">
+                </div>
+                <div class="form-group">
+                    <label>PAN</label>
+                    <input type="text" id="client-pan" placeholder="PAN Number">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="client-email">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="client-phone">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea id="client-address" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('client-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Client</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Transaction Modal -->
+    <div id="transaction-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('transaction-modal')">&times;</span>
+            <h2>Add Transaction</h2>
+            <form id="transaction-form">
+                <div class="form-group">
+                    <label>Date *</label>
+                    <input type="date" id="transaction-date" required>
+                </div>
+                <div class="form-group">
+                    <label>Client *</label>
+                    <select id="transaction-client" required>
+                        <option value="">Select Client</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Type *</label>
+                    <select id="transaction-type" required onchange="updateTransactionCategories()">
+                        <option value="">Select Type</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                        <option value="asset">Asset</option>
+                        <option value="liability">Liability</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="transaction-category" required>
+                        <option value="">Select Category</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="transaction-description" placeholder="Transaction description">
+                </div>
+                <div class="form-group">
+                    <label>Amount (₹) *</label>
+                    <input type="number" id="transaction-amount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="transaction-payment-method">
+                        <option value="cash">Cash</option>
+                        <option value="bank">Bank Transfer</option>
+                        <option value="cheque">Cheque</option>
+                        <option value="card">Card</option>
+                        <option value="online">Online Payment</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Reference Number</label>
+                    <input type="text" id="transaction-reference" placeholder="Invoice/Receipt number">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('transaction-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div id="invoice-modal" class="modal">
+        <div class="modal-content large">
+            <span class="close" onclick="closeModal('invoice-modal')">&times;</span>
+            <h2>Create Invoice</h2>
+            <form id="invoice-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Client *</label>
+                        <select id="invoice-client" required>
+                            <option value="">Select Client</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Invoice Date *</label>
+                        <input type="date" id="invoice-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Due Date *</label>
+                        <input type="date" id="invoice-due-date" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Invoice Number</label>
+                    <input type="text" id="invoice-number" placeholder="Auto-generated">
+                </div>
+                <div class="invoice-items">
+                    <h3>Items</h3>
+                    <div id="invoice-items-list">
+                        <div class="invoice-item">
+                            <input type="text" placeholder="Description" class="item-description">
+                            <input type="number" placeholder="Qty" class="item-quantity" min="1" value="1">
+                            <input type="number" placeholder="Rate" class="item-rate" step="0.01">
+                            <input type="number" placeholder="Tax %" class="item-tax" step="0.01" value="18">
+                            <span class="item-total">₹0.00</span>
+                            <button type="button" class="btn-icon" onclick="removeInvoiceItem(this)">🗑️</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-secondary" onclick="addInvoiceItem()">➕ Add Item</button>
+                </div>
+                <div class="invoice-summary">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <strong id="invoice-subtotal">₹0.00</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax:</span>
+                        <strong id="invoice-tax">₹0.00</strong>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <strong id="invoice-total">₹0.00</strong>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('invoice-modal')">Cancel</button>
+                    <button type="button" class="btn-secondary" onclick="previewInvoice()">Preview</button>
+                    <button type="submit" class="btn-primary">Save Invoice</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="ca-platform.js"></script>
+</body>
+</html>
+
